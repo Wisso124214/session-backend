@@ -1,0 +1,15 @@
+
+  - When the session is creating, it must use the device_id to does not confuse session between devices
+  - Si hay un error interno, rara vez llega al cliente
+  - On /create-session route (userRoutes) check if the device and user have an session, if isn't create it, else, only /set-session
+  - The id_session must be found searching the match with id_user and id_device, not be in user register
+
+  - If an user goes first to an page without login, the frontend must 
+   send information to an endpoint ('/info-user'?) and save it in an object
+   on backend with the username as key. When the info-user is getted by 
+   another route run an setTimeout to filter and delete the info of the user
+   5000 ms I think is ok. (The same logic to the jwt)
+
+   - On config create an object of specific code errors, and use it correctly
+
+   - If any table or register is corrupted or missing, create it with the default values
