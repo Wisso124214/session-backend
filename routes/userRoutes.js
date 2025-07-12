@@ -9,6 +9,34 @@ let info = {
   infoUsers: [],
 };
 
+// Función auxiliar para validar el token y cerrar sesión si es inválido
+async function validateTokenAndCloseSessionIfInvalid(req, res) {
+  const token = req.headers['authorization'] || req.body?.token || req.query?.token;
+  if (!token) {
+    res.status(400).json({ message: 'Token is required' });
+    return false;
+  }
+  try {
+    const result = await axios.get(`${SERVER_URL}/is-valid-token`, {
+      headers: { authorization: token },
+      body: { token }
+    });
+    if (!result.data.isValid) {
+      // Cierra sesión si el token no es válido
+      const id_user = req.body?.id_user || req.query?.id_user || req.body?.username || req.query?.username;
+      if (id_user) {
+        await axios.post(`${SERVER_URL}/close-session`, { id_user });
+      }
+      res.status(401).json({ isValid: false, message: 'Invalid token. Session closed.' });
+      return false;
+    }
+    return true;
+  } catch (error) {
+    res.status(401).json({ isValid: false, message: 'Invalid token. Session closed.' });
+    return false;
+  }
+}
+
 export const createUserRoutes = async (app) => {
   // app.get('/test-db', async (req, resp) => {
   //   //Evaluar permisos
@@ -426,8 +454,6 @@ export const createUserRoutes = async (app) => {
   app.post('/logout', async (req, res) => {
     const { id_user } = req.body || req.query; // Obtiene el ID del usuario de los parámetros de la consulta
 
-    console.log(req.body) 
-
     if (!id_user) {
       handleError(new Error('id_user is required'), 'Error closing session'); // Maneja errores
       return res.status(400).json({ message: 'id_user is required' });
@@ -579,7 +605,6 @@ export const createUserRoutes = async (app) => {
   });
 
   app.get('/create-token', async (req, res) => {
-
     const { username, id_contact, type } = req.query || req.body;
 
     if (!username || !id_contact || !type) {
@@ -590,6 +615,7 @@ export const createUserRoutes = async (app) => {
   });
 
   app.get('/verify-token', async (req, res) => {
+    if (!(await validateTokenAndCloseSessionIfInvalid(req, res))) return;
     const { token } = req.body;
 
     if (!token) {
@@ -611,6 +637,24 @@ export const createUserRoutes = async (app) => {
       res.status(401).json({ valid: false, message: 'Invalid token' });
     }
   });
+
+  app.get('/is-valid-token', async (req, res) => {
+    if (!(await validateTokenAndCloseSessionIfInvalid(req, res))) return;
+    const { token } = req.body || req.query;
+
+    if (!token) {
+      return res.status(400).json({ message: 'Token is required' });
+    }
+
+    try {
+      jwt.verify(token, secretKey);
+      res.json({ isValid: true });
+    } catch (error) {
+      console.error('Token verification error:', error);
+      handleError(error, 'Error verifying token'); // Maneja errores
+      res.status(401).json({ isValid: false, message: 'Invalid token. Please login again.' });
+    }
+  })
 
   app.get('/token-dispatcher', async (req, res) => {
     const { username } = req.body || req.query;
@@ -657,7 +701,6 @@ export const createUserRoutes = async (app) => {
     if (Object.keys(info).length === 0) {
       return res.status(404).json({ message: 'No info available' });
     }
-
     res.json(info);
   });
 

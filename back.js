@@ -8,137 +8,6 @@ import { createNoteControllers } from './controllers/noteController.js';
 import { createUserRoutes } from './routes/userRoutes.js';
 import { createNoteRoutes } from './routes/noteRoutes.js';
 
-import { encryptData } from './logicFuntions/main.js';
-
-const notes = [
-{
-    title: 'Note 1. This is a long title to test wrapping',
-    content: 'This is the content of note 1. It can be quite long, so it should wrap properly within the note component. This is just a test to see how the content looks when it is long enough to require wrapping.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 2',
-    content: 'This is the content of note 2.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 3',
-    content: 'This is the content of note 3.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 4',
-    content: 'This is the content of note 4.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 5',
-    content: 'This is the content of note 5.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 6',
-    content: 'This is the content of note 6.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 7',
-    content: 'This is the content of note 7.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 8',
-    content: 'This is the content of note 8.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 9',
-    content: 'This is the content of note 9.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 10',
-    content: 'This is the content of note 10.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 11',
-    content: 'This is the content of note 11.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 12',
-    content: 'This is the content of note 12.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 13',
-    content: 'This is the content of note 13.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 14',
-    content: 'This is the content of note 14.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 15',
-    content: 'This is the content of note 15.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 16',
-    content: 'This is the content of note 16.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 17',
-    content: 'This is the content of note 17.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 18',
-    content: 'This is the content of note 18.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 19',
-    content: 'This is the content of note 19.',
-    color: 'transparent',
-
-  },
-  {
-    title: 'Note 20',
-    content: 'This is the content of note 20.',
-    color: 'transparent',
-
-  },
-]
-
-// getIdDevice().then((id) => {
-//   console.log(id);
-// });
-
-// console.log(encryptData("data"))
-
 dbConnection(app)
   .then(async () => {
     await createUserControllers(app);
@@ -155,7 +24,6 @@ dbConnection(app)
         }
 
         const user = response.data.filter(user => user.username === username)[0]
-        console.log('User found:', user);
         return user;
       })
       .catch((error) => {
@@ -215,7 +83,29 @@ dbConnection(app)
       }
     }
 
-    // postNotes(notes, 'Wisso123')
+    // postNotes([
+    //   {
+    //     title: 'First Note',
+    //     content: 'This is the content of the first note.',
+    //     tags: ['tag1', 'tag2'],
+    //     created_at: new Date(),
+    //     updated_at: new Date(),
+    //   },
+    //   {
+    //     title: 'Second Note',
+    //     content: 'This is the content of the second note.',
+    //     tags: ['tag3', 'tag4'],
+    //     created_at: new Date(),
+    //     updated_at: new Date(),
+    //   },
+    //   {
+    //     title: 'Third Note',
+    //     content: 'This is the content of the third note.',
+    //     tags: ['tag5', 'tag6'],
+    //     created_at: new Date(),
+    //     updated_at: new Date(),
+    //   },
+    // ], 'Wisso123')
   })
   .catch((err) => {
     console.log('Error connecting to db ', err);

@@ -18,7 +18,6 @@ export const closeSession = async (
       .then(async () => {
         setIdMainSession(''); // Limpia el ID de la sesión principal
         setStrPage('login'); // Redirige a la página de inicio de sesión
-        console.log('Session closed'); // Muestra un mensaje en consola
       })
       .catch((error) => {
         handleError(error, 'Error closing session'); // Maneja errores
